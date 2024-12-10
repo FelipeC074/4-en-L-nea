@@ -4,22 +4,23 @@ import sys
 
 #Paso 1: dibujar correctamente las fichas, que se muevan cn las flechas y bajen cuando se cliquee ||||LISTO||||
 
-#Paso 2: Hacer que las fichas bajen hasta encontrarse con otra ficha debajo 
+#Paso 2: Hacer que las fichas bajen hasta encontrarse con otra ficha debajo|||LISTO||| FALTA REFINAR
 
 #Paso 3: Calcular quien gana y quien pierde según las posiciones de las fichas
-pygame.init()  #
+pygame.init()  #Setup
 Running = True
 Ancho, Alto = 700,700
 Pantalla = pygame.display.set_mode((Ancho,Alto))
 pygame.display.set_caption("4 En Raya")
 
 ListaFichs = []
-PrimFich = FC.Ficha(True)
+PrimFich = FC.Ficha(True)  
 ListaFichs.append(PrimFich)
+
 ListSeps = []
 
-for i in range(7):
-   separ = FC.Separador_H(i * 100, 7 - i)
+for i in range(1,8):
+   separ = FC.Separador_H(i * 100, 8 - i)
    ListSeps.append(separ)
 
 
@@ -33,24 +34,29 @@ def DibujarFichas():
 
 def DibujarSeparadoresH():
    for sep in ListSeps:
-      pygame.draw.rect(Pantalla, sep.color,(sep.posx, sep.posy, sep.width, sep.alto))
-
+      pygame.draw.rect(Pantalla, (20,60,200),(sep.posx, sep.posy, sep.width, sep.alto))
+def DibujarSeparadoresV():
+   for i in range(1,8):
+      pygame.draw.rect(Pantalla, (20,60,200), (i * 99, 100, 10, 700))
 
 def Clic_Hecho():
    #Caiga la ficha
-   ListaFichsPosXY = []
+   cont = 1
    for fich in ListaFichs:
-      if fich.tirda == False:
-        fichCaer = fich
-        ListaFichs.remove(fich)
-      else:
-           ListaFichsPosXY.append(fich.posy)
-   while True:   #whosvnio
-      fichCaer.Caer()#gjvsivsjpv
-      break   #vtkmvvspj
-    
-   fichCaer.tirda = True
-   ListaFichs.append(fichCaer)
+      if not fich.tirda:
+         fichCaer = fich
+         ListaFichs.remove(fich)
+   for othfich in ListaFichs:
+      if othfich.posx == fichCaer.posx:
+        cont += 1
+   #La ficha baje hasta el contador de nivel VAR CONT
+   for sep in ListSeps:
+      if sep.nivel == cont:
+         posf = sep.posy
+   while fichCaer.posy != posf:
+      fichCaer.Caer()
+   fichCaer.posy,fichCaer.tirda = fichCaer.posy - 50,True
+   ListaFichs.append(fichCaer)    
    #Se genere otra ficha
    if FC.Turno:
       FC.Turno = False
@@ -78,7 +84,8 @@ while Running:
                  fich.posx += 100
                  ListaFichs.remove(fich)
                  ListaFichs.append(fich)
-    Pantalla.fill((0, 0, 0))
+    Pantalla.fill((180, 200, 200))
     DibujarFichas()
     DibujarSeparadoresH()
+    DibujarSeparadoresV()
     pygame.display.flip()

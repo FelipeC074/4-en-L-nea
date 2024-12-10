@@ -3,7 +3,7 @@ Turno = True
 class Ficha:
     def __init__(self, Color):
      self.Color = Color
-     self.Tam = 45
+     self.Tam = 40
      self.posx = 350
      self.posy = 50
      self.tirda = False
